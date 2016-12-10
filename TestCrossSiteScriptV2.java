@@ -46,7 +46,7 @@ public class TestCrossSiteScriptV2 extends AbstractAppParamPlugin {
 
     @Override
     public int getId() {
-        return 40012;
+        return 40019;
     }
 
     @Override
