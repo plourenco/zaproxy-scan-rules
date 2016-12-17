@@ -23,9 +23,9 @@ Here, you can develop your features and improvements, so they can be used, later
 # What did we find when we started developing
 ZAP is not a small tool, thus meaning it's code is also not small.
 As we started diving into code we find that there's two main scan rules, ascanrules which stands for active scanning rules and pscanrules standing for passive scanning rules.
-#### ASCANRULES
+### ASCANRULES
 Active scanning rules is accounted for dealing with tests that do something in runtime, meaning they're actively "injecting" something, like Cross-Site Scripting (XSS), SQL Injection, Carriage Return Line Feed (CRLF), Path Traversal, Remote file include, and so on.
-#### PSCANRULES
+### PSCANRULES
 Passive scanning rules refers to a set of rules that test for bad configurations, such as, Password Autocomplete, missing ContentType, X-XSS-Protection Header, etc.
 
 ## Welcome to GitHub Pages
