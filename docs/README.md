@@ -41,7 +41,7 @@ Passive scanning rules refers to a set of rules that test for bad configurations
 This package is, just as the name says, for starting with relative ease. We recommend you to use this, since it will save you a lot of time.   
 Enables you to enter the website for testing, and executes all scans available.
 
-[](https://github.com/pedroo21/ZAP-Multi-Scan-Rules/tree/master/imgs/quickstart.png)
+[](https://github.com/pedroo21/ZAP-Multi-Scan-Rules/blob/master/imgs/quickstart.png)
 
 # Getting started
 In this section we're going to explain what we did to start develop an extension for ZAP, so you can have an idea of what you need to do.    
@@ -50,11 +50,11 @@ In this section we're going to explain what we did to start develop an extension
 2. Download/Clone/Fork ZAP-Extensions github source code [here](https://github.com/zaproxy/zap-extensions)
 3. We used IntelliJ and we had to do a few configurations. We describe them below
 4. As ZAP-Extensions project is not runnable and it's using Ant as a build framework you need to open Ant Build window. In IntelliJ simply click on `View > Tool Windows > Ant Build`. A window should appear looking like the one below
-[](https://github.com/pedroo21/ZAP-Multi-Scan-Rules/tree/master/imgs/ant.png)
+[](https://github.com/pedroo21/ZAP-Multi-Scan-Rules/blob/master/imgs/ant.png)
 5. We recommend you to run `compile` on Ant window
 6. Then, for starters, we ran `deploy-quickstart`. After it's completion in returns a .zap extension file that, if you have the both projects in the same directory, will automatically place itself in ZAP addons folder. Otherwise you'll have to move the file to `zaproxy/src/plugin`
 7. Run ZAP. If everything went successful you should see a window like the one below.
-[](https://github.com/pedroo21/ZAP-Multi-Scan-Rules/tree/master/imgs/zap.png)
+[](https://github.com/pedroo21/ZAP-Multi-Scan-Rules/blob/master/imgs/zap.png)
 8. Congratulations! Quickstart is now deployed and working. If you enter a website nothing will be scanned, since ascanrules are not deployed yet. Though you can type a website and click `Attack` 
 
 
