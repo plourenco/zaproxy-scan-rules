@@ -13,7 +13,9 @@ Living without access to information at any time, from anywhere, through multipl
 Lately, with the emerging of personal computers, smart phones, there are a lot of applications for everything, starting from searching on internet, to social networking, shopping, banking and a lot of more online services.
 
 We can now imagine that there is a lot of information saved in our devices, such as, photos, documents, emails, conversations, important numbers, and lots of other type of information.
+
 # What about ZAP
+
 ### ZAP
 
 ZAP is developed by OWASP (Open Web Application Security Project). It is one of the most popular free and actively maintained, by many volunteers, Security Testing Tools.    
