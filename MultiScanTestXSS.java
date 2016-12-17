@@ -30,7 +30,7 @@ public class MultiScanTestXSS extends AbstractAppParamPlugin {
         }
 
         List<HtmlContext> contexts = performAttack (msg, param,
-                "'\"<script>alert(1);</script>", null, 0);
+                "' OR '1' = '1", null, 0);
         if (contexts == null) {
             return;
         }
