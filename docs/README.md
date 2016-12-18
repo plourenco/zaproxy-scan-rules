@@ -26,7 +26,7 @@ Summing up, automating security testing gives one the chance to test their appli
 
 Our opinion is that this subject is becoming more and more popular as technology evolves leading to a demand of increased security at twice the pace. Hence, we believe one should invest in this kind of tests, whether as usage or improvement, as we did on enhancing an extension for ZAP. 
 
-![](https://github.com/pedroo21/ZAP-Multi-Scan-Rules/blob/master/imgs/security.png?raw=true)
+![](https://github.com/pedroo21/ZAP-Multi-Scan-Rules/blob/master/imgs/security.jpg?raw=true)
 
 # What about ZAP
 
