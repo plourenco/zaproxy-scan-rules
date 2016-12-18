@@ -1,5 +1,6 @@
 package org.zaproxy.zap.extension.ascanrules;
 
+import java.util.List;
 import java.util.concurrent.TimeUnit;
 
 import org.openqa.selenium.*;
@@ -12,6 +13,8 @@ import org.openqa.selenium.remote.*;
 import org.parosproxy.paros.core.scanner.*;
 import org.parosproxy.paros.core.scanner.Alert;
 import org.parosproxy.paros.network.HttpMessage;
+import org.zaproxy.zap.httputils.HtmlContext;
+import org.zaproxy.zap.httputils.HtmlContextAnalyser;
 import org.zaproxy.zap.model.Vulnerabilities;
 import org.zaproxy.zap.model.Vulnerability;
 
@@ -26,6 +29,8 @@ public class TestSelenium extends AbstractAppParamPlugin {
 
     private WebDriver driver;
     private String site;
+
+    private boolean attackWorked = false;
 
     public void setUp(HttpMessage msg) throws Exception {
 
@@ -44,16 +49,31 @@ public class TestSelenium extends AbstractAppParamPlugin {
         driver.manage().timeouts().implicitlyWait(30, TimeUnit.SECONDS);
     }
 
-    public void tearDown() throws Exception {
+    public void tearDown(HttpMessage msg) throws Exception {
         driver.close();
+
+        System.out.println("TEAR DOWN");
+
+        if (this.attackWorked){
+            HtmlContextAnalyser hca = new HtmlContextAnalyser(msg);
+            List<HtmlContext> contexts = hca.getHtmlContexts("' OR '1' = '1");
+            try {
+                bingo(Alert.RISK_HIGH, Alert.CONFIDENCE_LOW, null, "hello", contexts.get(0).getTarget(),
+                        "", contexts.get(0).getTarget(), contexts.get(0).getMsg());
+            }catch (Exception e){
+                log.error(e.getMessage());
+            }
+        }
+        System.out.println("TEAR DOWN2");
     }
 
-    public void tstLoginUser() {
+    public void tstLoginUser(HttpMessage msg) {
 
         this.loginUser("tom",  "' OR '1' = '1");
         if (driver.getPageSource().indexOf("Succesfully logged in.") > 0) {
             System.out.println("LOGIN: PASS");
-            bingo(Alert.RISK_HIGH, Alert.CONFIDENCE_LOW, null, null, null, null, null);
+
+            this.attackWorked = true;
 
 
         }else
@@ -100,14 +120,14 @@ public class TestSelenium extends AbstractAppParamPlugin {
         }
     }
 
-    public void testAll() {
-        tstLoginUser();
+    public void testAll(HttpMessage msg) {
+        tstLoginUser(msg);
     }
 
 
     @Override
     public int getId() {
-        return 0;
+        return 45543;
     }
 
     @Override
@@ -168,8 +188,8 @@ public class TestSelenium extends AbstractAppParamPlugin {
 
         try{
             test.setUp(msg);
-            test.testAll();
-            test.tearDown();
+            test.testAll(msg);
+            test.tearDown(msg);
         }catch (Exception e){
             log.error(e.getMessage());
         }
