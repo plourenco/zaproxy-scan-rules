@@ -71,7 +71,37 @@ A window should appear looking like [this](https://github.com/pedroo21/ZAP-Multi
 6. Then, for starters, we ran `deploy-quickstart`. After it's completion in returns a .zap extension file that, if you have the both projects in the same directory, will automatically place itself in ZAP addons folder. Otherwise you'll have to move the file to `zaproxy/src/plugin`
 7. Run ZAP. If everything went successful you should see a window like the one below.
 ![](https://github.com/pedroo21/ZAP-Multi-Scan-Rules/blob/master/imgs/zap.png?raw=true)
-8. Congratulations! Quickstart is now deployed and working. If you enter a website nothing will be scanned, since ascanrules are not deployed yet. Though you can type a website and click `Attack` 
+8. Congratulations! Quickstart is now deployed and working. If you enter a website nothing will be scanned, since ascanrules are not deployed yet. Though you can type a website, click `Attack` and see what happens for yourself
+9. Now we're ready to deploy some ascanrules. Let's start by the easier ones. Open `ZapAddOn.xml` inside `ascanrules folder`.    
+![](https://github.com/pedroo21/ZAP-Multi-Scan-Rules/blob/master/imgs/zapaddon.png?raw=true)
+10. Comment line codes out like the image below
+![](https://github.com/pedroo21/ZAP-Multi-Scan-Rules/blob/master/imgs/zapaddoncmt.png?raw=true)
+11. Select `deploy-ascanrules` on Ant window and click `Run`
+12. After its completion, re-run ZAP.
+13. Retry the same test when you ran ZAP for the first time. If you spot any differences your application is vulnerable to XSS otherwise congratulations you're safe for XSS
+15. If you want to add more rules to ZAP, just uncomment the lines you commented at step 10 and repeat the 11 to 13 steps. 
+ 
+This was an easy introduction to what you have to do to build ZAP extensions or rules.
+
+# IntelliJ Configuration
+1. Open ZAP project.
+2. Right click root folder and open module settings (Command + down arrow on MacOS)
+3. In project if project compiler output is not set, set it to `"projectPath"/zaproxy/out`
+4. Still in module settings go to modules tab select `zaproxy` and go to `paths` tab
+5. In compiler output tick second option and set the `Output Path` to `"projectPath"/zaproxy/bin` and tick `Exclude output paths`
+6. Move on to `Artifacts`
+7. Click the `+` button and add a `Jar` from `Modules with Dependencies`
+8. In the popup select the main class to be `ZAP` and click `Ok`
+9. Change the name to `zap_dev:jar`
+10. Set the output directory to `"projectPath"/zaproxy/build`
+11. Tick `Build on Make`
+
+# Developing an extension
+
+We started by the basics, which were, for us, looking at other people's implementation. There was a pattern, and all of them extended AppPlugin, either via AbstractAppPlugin or AbstractAppParamPlugin.
+
+
+# Our extension
 
 
 
