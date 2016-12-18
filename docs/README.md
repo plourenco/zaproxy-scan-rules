@@ -12,7 +12,21 @@ As we had to do a presentation about Security Testing we decided it would be gre
 Living without access to information at any time, from anywhere, through multiple devices is, nowadays, becoming unimaginable. Despite, information security is, now, more important than the access to that information.   
 Lately, with the emerging of personal computers, smart phones, there are a lot of applications for everything, starting from searching on internet, to social networking, shopping, banking and a lot of more online services.
 
-We can now imagine that there is a lot of information saved in our devices, such as, photos, documents, emails, conversations, important numbers, and lots of other type of information.
+One can now imagine that there is a lot of information saved in our devices, such as, photos, documents, emails, conversations, important numbers, and lots of other type of information.
+This information, critical or not, has to maintain its confidentiality. How can one guarantee it without testing? Well, he can't.
+
+At first glance, one could think manual testing would suffice, but, what if the application scales, we have to test manually a lot of things and repeat the tests a million times or, even worse, we forget to test something that is really important.
+This is when automate security testing arise. 
+
+Automating security tests gives one the chance to just click a button to run a set of tests, saving a lot of time and effort at medium-long term, allows one to not forget about testing some feature and, probably more relevant, leads people to work together on producing scanning rules.
+
+Although, keep in mind, this does not prevent, at all, zero day attacks. Still, what can prevent this type of attacks? Probably nothing. 
+
+Summing up, automating security testing gives one the chance to test their application for known attacks in order to try to prevent them from happening.
+
+Our opinion is that this subject is becoming more and more popular as technology evolves leading to a demand of increased security at twice the pace. Hence, we believe one should invest in this kind of tests, whether as usage or improvement, as we did on enhancing an extension for ZAP. 
+
+![](https://github.com/pedroo21/ZAP-Multi-Scan-Rules/blob/master/imgs/security.png?raw=true)
 
 # What about ZAP
 
@@ -43,7 +57,7 @@ Passive scanning rules refers to a set of rules that test for bad configurations
 This package is, just as the name says, for starting with relative ease. We recommend you to use this, since it will save you a lot of time.   
 Enables you to enter the website for testing, and executes all scans available.
 
-![](https://github.com/pedroo21/ZAP-Multi-Scan-Rules/blob/master/imgs/zap.png?raw=true)
+![](https://github.com/pedroo21/ZAP-Multi-Scan-Rules/blob/master/imgs/quickstart.png?raw=true)
 
 # Getting started
 In this section we're going to explain what we did to start develop an extension for ZAP, so you can have an idea of what you need to do.    
