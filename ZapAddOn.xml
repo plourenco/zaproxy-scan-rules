@@ -17,9 +17,9 @@
 		<!-- <ascanrule>org.zaproxy.zap.extension.ascanrules.BufferOverflow</ascanrule>
 		<ascanrule>org.zaproxy.zap.extension.ascanrules.CodeInjectionPlugin</ascanrule>
 		<ascanrule>org.zaproxy.zap.extension.ascanrules.CommandInjectionPlugin</ascanrule>
-		<ascanrule>org.zaproxy.zap.extension.ascanrules.FormatString</ascanrule>
+		<ascanrule>org.zaproxy.zap.extension.ascanrules.FormatString</ascanrule>-->
 		<ascanrule>org.zaproxy.zap.extension.ascanrules.TestCrossSiteScriptV2</ascanrule>
-		<ascanrule>org.zaproxy.zap.extension.ascanrules.TestDirectoryBrowsing</ascanrule>
+		<!-- <ascanrule>org.zaproxy.zap.extension.ascanrules.TestDirectoryBrowsing</ascanrule>
 		<ascanrule>org.zaproxy.zap.extension.ascanrules.TestExternalRedirect</ascanrule>
 		<ascanrule>org.zaproxy.zap.extension.ascanrules.TestInjectionCRLF</ascanrule>
 		<ascanrule>org.zaproxy.zap.extension.ascanrules.TestParameterTamper</ascanrule>
@@ -29,8 +29,9 @@
 		<ascanrule>org.zaproxy.zap.extension.ascanrules.TestPersistentXSSSpider</ascanrule>
 		<ascanrule>org.zaproxy.zap.extension.ascanrules.TestRemoteFileInclude</ascanrule>
 		<ascanrule>org.zaproxy.zap.extension.ascanrules.TestServerSideInclude</ascanrule>
-		<ascanrule>org.zaproxy.zap.extension.ascanrules.TestSQLInjection</ascanrule> -->
+		<ascanrule>org.zaproxy.zap.extension.ascanrules.TestSQLInjection</ascanrule>-->
 		<ascanrule>org.zaproxy.zap.extension.ascanrules.MultiScanTestXSS</ascanrule>
+		<ascanrule>org.zaproxy.zap.extension.ascanrules.TestSelenium</ascanrule>
 	</ascanrules>
 	<pscanrules/>
 	<filters/>
