@@ -1,8 +1,11 @@
 package org.zaproxy.zap.extension.ascanrules;
 
+import java.net.UnknownHostException;
 import java.util.List;
 import java.util.concurrent.TimeUnit;
 
+import org.apache.commons.httpclient.InvalidRedirectLocationException;
+import org.apache.commons.httpclient.URIException;
 import org.openqa.selenium.*;
 
 import org.apache.log4j.Logger;
@@ -52,24 +55,14 @@ public class TestSelenium extends AbstractAppParamPlugin {
     public void tearDown(HttpMessage msg) throws Exception {
         driver.close();
 
-        System.out.println("TEAR DOWN");
 
-        if (this.attackWorked){
-            HtmlContextAnalyser hca = new HtmlContextAnalyser(msg);
-            List<HtmlContext> contexts = hca.getHtmlContexts("' OR '1' = '1");
-            try {
-                bingo(Alert.RISK_HIGH, Alert.CONFIDENCE_LOW, null, "hello", contexts.get(0).getTarget(),
-                        "", contexts.get(0).getTarget(), contexts.get(0).getMsg());
-            }catch (Exception e){
-                log.error(e.getMessage());
-            }
-        }
-        System.out.println("TEAR DOWN2");
     }
 
     public void tstLoginUser(HttpMessage msg) {
 
         this.loginUser("tom",  "' OR '1' = '1");
+
+
         if (driver.getPageSource().indexOf("Succesfully logged in.") > 0) {
             System.out.println("LOGIN: PASS");
 
@@ -181,18 +174,68 @@ public class TestSelenium extends AbstractAppParamPlugin {
 
     }
 
+    private List<HtmlContext> performAttack (HttpMessage msg, String param, String attack,
+                                             HtmlContext targetContext, int ignoreFlags) {
+        if (isStop()) {
+            return null;
+        }
+
+        HttpMessage msg2 = msg.cloneRequest();
+        setParameter(msg2, param, attack);
+        try {
+            sendAndReceive(msg2);
+        } catch (URIException e) {
+            if (log.isDebugEnabled()) {
+                log.debug("Failed to send HTTP message, cause: " + e.getMessage());
+            }
+            return null;
+        } catch (InvalidRedirectLocationException |UnknownHostException e) {
+            // Not an error, just means we probably attacked the redirect location
+            return null;
+        } catch (Exception e) {
+            log.error(e.getMessage(), e);
+        }
+
+        if (isStop()) {
+            return null;
+        }
+
+        HtmlContextAnalyser hca = new HtmlContextAnalyser(msg2);
+        if (Plugin.AlertThreshold.HIGH.equals(this.getAlertThreshold())) {
+            // High level, so check all results are in the expected context
+            return hca.getHtmlContexts(attack, targetContext, ignoreFlags);
+        }
+        return hca.getHtmlContexts(attack);
+    }
+
 
     @Override
     public void scan(HttpMessage msg, String param, String value) {
-        TestSelenium test = new TestSelenium();
+
+        this.init(msg, this.getParent());
 
         try{
-            test.setUp(msg);
-            test.testAll(msg);
-            test.tearDown(msg);
+            this.setUp(msg);
+            this.testAll(msg);
+            this.tearDown(msg);
         }catch (Exception e){
             log.error(e.getMessage());
         }
+
+        System.out.println("TEAR DOWN");
+
+        if (this.attackWorked){
+
+            try {
+
+                bingo(Alert.RISK_HIGH, Alert.CONFIDENCE_MEDIUM,
+                        this.site, null, "attack",
+                        "otherInfo", null, msg);
+            }catch (Exception e){
+                log.error(e.getMessage());
+            }
+        }
+        System.out.println("TEAR DOWN2");
 
     }
 }
