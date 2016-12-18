@@ -8,11 +8,9 @@ import org.apache.log4j.Logger;
 
 import org.openqa.selenium.chrome.ChromeDriver;
 import org.openqa.selenium.remote.*;
-import org.openqa.selenium.firefox.*;
 
-
-import org.parosproxy.paros.core.scanner.AbstractAppParamPlugin;
-import org.parosproxy.paros.core.scanner.Category;
+import org.parosproxy.paros.core.scanner.*;
+import org.parosproxy.paros.core.scanner.Alert;
 import org.parosproxy.paros.network.HttpMessage;
 import org.zaproxy.zap.model.Vulnerabilities;
 import org.zaproxy.zap.model.Vulnerability;
@@ -27,9 +25,12 @@ public class TestSelenium extends AbstractAppParamPlugin {
 
 
     private WebDriver driver;
-    private String site = "http://localhost:8888/bricks/login-1/";
+    private String site;
 
-    public void setUp() throws Exception {
+    public void setUp(HttpMessage msg) throws Exception {
+
+        this.site = msg.getRequestHeader().getURI().toString();
+
         Proxy proxy = new Proxy();
         proxy.setHttpProxy("localhost:8090");
         proxy.setFtpProxy("localhost:8090");
@@ -49,16 +50,15 @@ public class TestSelenium extends AbstractAppParamPlugin {
 
     public void tstLoginUser() {
 
-        sleep();
-        this.loginUser("tom", "tom");
-        sleep();
-        if (driver.getPageSource().indexOf("Succesfully logged in.") > 0)
+        this.loginUser("tom",  "' OR '1' = '1");
+        if (driver.getPageSource().indexOf("Succesfully logged in.") > 0) {
             System.out.println("LOGIN: PASS");
-        else
+            bingo(Alert.RISK_HIGH, Alert.CONFIDENCE_LOW, null, null, null, null, null);
+
+
+        }else
             System.out.println("LOGIN: FAIL");
 
-        sleep();
-        sleep();
     }
 
 
@@ -73,7 +73,7 @@ public class TestSelenium extends AbstractAppParamPlugin {
 
         link = driver.findElement(By.id("submit"));
         link.click();
-        sleep();
+        //sleep();
     }
 
     protected WebDriver getDriver() {
@@ -104,12 +104,6 @@ public class TestSelenium extends AbstractAppParamPlugin {
         tstLoginUser();
     }
 
-    public static void main(String[] args) throws Exception {
-        TestSelenium test = new TestSelenium();
-        test.setUp();
-        test.testAll();
-        test.tearDown();
-    }
 
     @Override
     public int getId() {
@@ -167,12 +161,13 @@ public class TestSelenium extends AbstractAppParamPlugin {
 
     }
 
+
     @Override
     public void scan(HttpMessage msg, String param, String value) {
         TestSelenium test = new TestSelenium();
 
         try{
-            test.setUp();
+            test.setUp(msg);
             test.testAll();
             test.tearDown();
         }catch (Exception e){
