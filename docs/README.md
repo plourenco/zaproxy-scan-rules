@@ -97,12 +97,27 @@ This was an easy introduction to what you have to do to build ZAP extensions or 
 11. Tick `Build on Make`
 
 # Developing an extension
-
 We started by the basics, which were, for us, looking at other people's implementation. There was a pattern, and all of them extended AppPlugin, either via AbstractAppPlugin or AbstractAppParamPlugin.
 
+There will be a video here explaining how.
 
 # Our extension
+As we were testing ZAP for a presentation we developed an insecure website. We ran ZAP tests against it but we found that there was not scans for html input boxes, only for url queries.
+So, we thought, there could be a real use for testing html requests within input boxes and that's why we started developing an extension to do that.
 
+## How did we do it?
+We used another tool, [Selenium](http://www.seleniumhq.org/), and integrated it with ZAP.
+
+Selenium allows us to query for html elements, insert data and click into them.
+
+### Form Based SQLInjection
+Based on well known SQL strings and queries we try to inject code into the application, hoping it will lead us to use the system without the alleged authorization.
+
+### Form Based XSS
+Based on DomXSS and ReflectedXSS we try to inject code wishing we will be able to get something to our advantage.
+
+### Form Based Shell Injection
+Based on Html File Input Type Element we try to upload a PHP Shell expecting to access the file system without authorization.
 
 
 
