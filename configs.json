@@ -1,0 +1,7 @@
+{
+  "shellurl":"blábláblá",
+  "shelldir":"/Users/mercurius/Downloads/shell.php",
+  "selectbtn": "userfile",
+  "submitbtn":"upload",
+  "seleniumdriver":"/Users/mercurius/Downloads/chromedriver"
+}
