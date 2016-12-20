@@ -13,6 +13,8 @@ import org.openqa.selenium.remote.*;
 import org.parosproxy.paros.core.scanner.*;
 import org.parosproxy.paros.core.scanner.Alert;
 import org.parosproxy.paros.network.HttpMessage;
+import org.zaproxy.zap.extension.selenium.Browser;
+import org.zaproxy.zap.extension.selenium.ExtensionSelenium;
 import org.zaproxy.zap.model.Vulnerabilities;
 import org.zaproxy.zap.model.Vulnerability;
 
@@ -61,6 +63,10 @@ public class TestSelenium extends AbstractAppParamPlugin {
      */
     public void setUp(HttpMessage msg) throws Exception {
 
+        JSONUtils config = new JSONUtils();
+        config.readConfig();
+        System.out.println("Driver: " + config.getSeleniumDriver());
+
         this.site = msg.getRequestHeader().getURI().toString();
 
         Proxy proxy = new Proxy();
@@ -70,7 +76,7 @@ public class TestSelenium extends AbstractAppParamPlugin {
         DesiredCapabilities capabilities = new DesiredCapabilities();
         capabilities.setCapability(CapabilityType.PROXY, proxy);
 
-        System.setProperty("webdriver.chrome.driver", DRIVER_PATH);
+        System.setProperty("webdriver.chrome.driver", config.getSeleniumDriver());
         driver = new ChromeDriver();
         this.setDriver(driver);
         driver.manage().timeouts().implicitlyWait(30, TimeUnit.SECONDS);
@@ -247,7 +253,7 @@ public class TestSelenium extends AbstractAppParamPlugin {
             this.tstLoginUser(value, msg);
             this.tearDown();
         }catch (Exception e){
-            log.error(e.getMessage());
+            e.printStackTrace();
         }
 
     }

@@ -1,32 +1,25 @@
 package org.zaproxy.zap.extension.ascanrules;
 
-
-import org.apache.commons.exec.ExecuteException;
+import net.sf.json.JSONObject;
+import net.sf.json.JSONSerializer;
+import org.apache.commons.io.IOUtils;
 import org.apache.log4j.Logger;
 
-import org.json.simple.JSONObject;
-import org.json.simple.parser.JSONParser;
-
-import org.openqa.selenium.Alert;
 import org.openqa.selenium.chrome.ChromeDriver;
-import org.openqa.selenium.firefox.internal.Streams;
 import org.openqa.selenium.remote.*;
 import org.openqa.selenium.*;
 
-import org.openqa.selenium.remote.server.handler.WebElementHandler;
 import org.parosproxy.paros.core.scanner.*;
 import org.parosproxy.paros.network.HttpMessage;
 
 import org.zaproxy.zap.model.Vulnerabilities;
 import org.zaproxy.zap.model.Vulnerability;
 
+import java.io.FileInputStream;
 import java.io.FileReader;
 
 import java.util.concurrent.TimeUnit;
 
-/**
- * Created by mercurius on 19/12/16.
- */
 public class PHPShellInjection extends AbstractAppParamPlugin {
 
     private Logger log = Logger.getLogger(this.getClass());
@@ -42,13 +35,12 @@ public class PHPShellInjection extends AbstractAppParamPlugin {
     private boolean attackWorked = false;
 
     private void readConfigs(){
-        JSONParser parser = new JSONParser();
 
         try {
+            String jsonTxt = IOUtils.toString(new FileInputStream(getClass().getResource("configs.json").getFile()),
+                    "UTF-8");
 
-            Object obj = parser.parse(new FileReader("/Users/mercurius/Desktop/zap-extensions/src/org/zaproxy/zap/extension/ascanrules/configs.json"));
-
-            JSONObject jsonObject = (JSONObject) obj;
+            JSONObject jsonObject = (JSONObject) JSONSerializer.toJSON(jsonTxt);
 
             shellDir = (String) jsonObject.get("shelldir");
             shellUrl = (String) jsonObject.get("shellurl");
@@ -58,7 +50,6 @@ public class PHPShellInjection extends AbstractAppParamPlugin {
 
         } catch (Exception e) {
             log.error(e.getStackTrace());
-            System.out.println(e.getStackTrace());
             e.getStackTrace();
         }
     }

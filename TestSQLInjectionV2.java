@@ -16,37 +16,58 @@ import org.zaproxy.zap.model.Vulnerability;
 import java.net.UnknownHostException;
 import java.util.List;
 
-public class MultiScanTestXSS extends AbstractAppParamPlugin {
+public class TestSQLInjectionV2 extends AbstractAppParamPlugin {
 
-    private static Logger log = Logger.getLogger(MultiScanTestXSS.class);
+    private static Logger log = Logger.getLogger(TestSQLInjectionV2.class);
     private static Vulnerability vuln = Vulnerabilities.getVulnerability("wasc_8");
+    /**
+     * generic one-line comment. Various RDBMS Documentation suggests that this
+     * syntax works with almost every single RDBMS considered here
+     */
+    private final String SQL_ONE_LINE_COMMENT = " -- ";
+
+    /**
+     * always true statement for comparison if no output is returned from AND in
+     * boolean based SQL injection check Note that, if necessary, the code also
+     * tries a variant with the one-line comment " -- " appended to the end.
+     */
+    private final String[] SQL_LOGIC_OR_TRUE = {
+            " OR 1=1" + SQL_ONE_LINE_COMMENT,
+            "' OR '1'='1'" + SQL_ONE_LINE_COMMENT,
+            "\" OR \"1\"=\"1\"" + SQL_ONE_LINE_COMMENT,
+            " OR 1=1",
+            "' OR '1'='1",
+            "\" OR \"1\"=\"1",
+            "%", //attack for SQL LIKE statements
+            "%' " + SQL_ONE_LINE_COMMENT, //attack for SQL LIKE statements
+            "%\" " + SQL_ONE_LINE_COMMENT, //attack for SQL LIKE statements
+    };
 
     @Override
     public void scan(HttpMessage msg, String param, String value) {
-        boolean attackWorked = false;
 
-        if (isStop()) {
-            return;
-        }
+        for(int i=0; i<SQL_LOGIC_OR_TRUE.length; i++) {
 
-        List<HtmlContext> contexts = performAttack (msg, param,
-                "' OR '1' = '1", null, 0);
-        if (contexts == null) {
-            return;
-        }
-        if (contexts.size() > 0) {
-            // Yep, its vulnerable
-            bingo(Alert.RISK_HIGH, Alert.CONFIDENCE_LOW, null, param, contexts.get(0).getTarget(),
-                    "", contexts.get(0).getTarget(), contexts.get(0).getMsg());
-            attackWorked = true;
-            for(HtmlContext hc : contexts) {
-                System.out.println(hc.getTarget()
-                        + " " + hc.getTagAttribute() + " " + hc.getSurroundingQuote());
-                System.out.println(hc.getMsg().getRequestBody().getBytes());
+            if (isStop()) {
+                return;
+            }
+
+            List<HtmlContext> contexts = performAttack(msg, param,
+                    "' OR '1' = '1", "Succesfully logged in.", null, 0);
+            if (contexts == null) {
+                return;
+            }
+            if (contexts.size() > 0) {
+                // Yep, its vulnerable
+                bingo(Alert.RISK_HIGH, Alert.CONFIDENCE_MEDIUM, null, param, contexts.get(0).getTarget(),
+                        "", contexts.get(0).getTarget(), contexts.get(0).getMsg());
             }
         }
     }
 
+    /**
+     * NECESSARY METHODS FOR ZAP PLUGIN
+     */
     @Override
     public int getId() {
         return 0;
@@ -54,7 +75,7 @@ public class MultiScanTestXSS extends AbstractAppParamPlugin {
 
     @Override
     public String getName() {
-        return "MultiScanTestXSS";
+        return "TestSQLInjectionV2";
     }
 
     @Override
@@ -103,7 +124,18 @@ public class MultiScanTestXSS extends AbstractAppParamPlugin {
 
     }
 
+    /**
+     * Clone the request, send and receive and look evidences of attack
+     * @param msg
+     * @param param
+     * @param attack
+     * @param lookup
+     * @param targetContext
+     * @param ignoreFlags
+     * @return
+     */
     private List<HtmlContext> performAttack (HttpMessage msg, String param, String attack,
+                                             String lookup,
                                              HtmlContext targetContext, int ignoreFlags) {
         if (isStop()) {
             return null;
@@ -132,8 +164,8 @@ public class MultiScanTestXSS extends AbstractAppParamPlugin {
         HtmlContextAnalyser hca = new HtmlContextAnalyser(msg2);
         if (Plugin.AlertThreshold.HIGH.equals(this.getAlertThreshold())) {
             // High level, so check all results are in the expected context
-            return hca.getHtmlContexts(attack, targetContext, ignoreFlags);
+            return hca.getHtmlContexts(lookup, targetContext, ignoreFlags);
         }
-        return hca.getHtmlContexts(attack);
+        return hca.getHtmlContexts(lookup);
     }
 }
