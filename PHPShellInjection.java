@@ -41,12 +41,14 @@ public class PHPShellInjection extends AbstractAppParamPlugin {
     private String site;
     private boolean attackWorked = false;
 
+    private String configPath = "/Users/mercurius/Desktop/zap-extensions/src/org/zaproxy/zap/extension/ascanrules/configs.json";
+
     private void readConfigs(){
         JSONParser parser = new JSONParser();
 
         try {
 
-            Object obj = parser.parse(new FileReader("/Users/mercurius/Desktop/zap-extensions/src/org/zaproxy/zap/extension/ascanrules/configs.json"));
+            Object obj = parser.parse(new FileReader(configPath));
 
             JSONObject jsonObject = (JSONObject) obj;
 
