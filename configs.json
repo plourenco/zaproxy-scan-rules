@@ -3,5 +3,9 @@
   "shelldir":"/Users/mercurius/Downloads/shell.php",
   "selectbtn": "userfile",
   "submitbtn":"upload",
-  "seleniumdriver":"/Users/Pedro/Downloads/chromedriver"
+  "seleniumdriver":"/Users/Pedro/Downloads/chromedriver",
+  "sqlSuccess": [
+    "Succesfully logged in.",
+    "Successfully logged in."
+  ]
 }

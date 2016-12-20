@@ -26,8 +26,8 @@ import org.zaproxy.zap.model.Vulnerability;
 public class TestSelenium extends AbstractAppParamPlugin {
 
     //Required for the Chrome Driver tool
-    public final String DRIVER_PATH = "/Users/mzamith/Downloads/chromedriver";
     private static Vulnerability vuln = Vulnerabilities.getVulnerability("wasc_8");
+    private JSONUtils config;
 
     /**
      * generic one-line comment. Various RDBMS Documentation suggests that this
@@ -63,9 +63,8 @@ public class TestSelenium extends AbstractAppParamPlugin {
      */
     public void setUp(HttpMessage msg) throws Exception {
 
-        JSONUtils config = new JSONUtils();
+        config = new JSONUtils();
         config.readConfig();
-        System.out.println("Driver: " + config.getSeleniumDriver());
 
         this.site = msg.getRequestHeader().getURI().toString();
 
@@ -110,18 +109,20 @@ public class TestSelenium extends AbstractAppParamPlugin {
             //sleep(2);
 
             //Success if the success message is displayed
-            if (driver.getPageSource().indexOf("Succesfully logged in.") > 0) {
+            for(String test : config.getSQLSuccess()) {
+                if (driver.getPageSource().indexOf(test) > 0) {
 
-                System.out.println("LOGIN: PASS");
+                    System.out.println("LOGIN: PASS");
 
-                bingo(Alert.RISK_HIGH, Alert.CONFIDENCE_MEDIUM, getName(), getDescription(),
-                        this.site, //url
-                        value, sqlBooleanAndTrueValue,
-                        "extra info", getSolution(), "", msg2);
-                // break;
+                    bingo(Alert.RISK_HIGH, Alert.CONFIDENCE_MEDIUM, getName(), getDescription(),
+                            this.site, //url
+                            value, sqlBooleanAndTrueValue,
+                            "extra info", getSolution(), "", msg2);
+                    // break;
 
-            }else
-                System.out.println("LOGIN: FAIL");
+                } else
+                    System.out.println("LOGIN: FAIL");
+            }
         }
     }
 

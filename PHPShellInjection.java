@@ -25,36 +25,15 @@ public class PHPShellInjection extends AbstractAppParamPlugin {
     private Logger log = Logger.getLogger(this.getClass());
     private static Vulnerability vuln = Vulnerabilities.getVulnerability("wasc_8");
 
-    private String shellDir;
-    private String shellUrl;
-    private String selectBtn;
-    private String submitBtn;
-    private String seleniumDriver;
+    private JSONUtils config;
     private WebDriver driver;
     private String site;
     private boolean attackWorked = false;
 
-    private void readConfigs(){
-
-        try {
-            String jsonTxt = IOUtils.toString(new FileInputStream(getClass().getResource("configs.json").getFile()),
-                    "UTF-8");
-
-            JSONObject jsonObject = (JSONObject) JSONSerializer.toJSON(jsonTxt);
-
-            shellDir = (String) jsonObject.get("shelldir");
-            shellUrl = (String) jsonObject.get("shellurl");
-            selectBtn = (String) jsonObject.get("selectbtn");
-            submitBtn = (String) jsonObject.get("submitbtn");
-            seleniumDriver = (String) jsonObject.get("seleniumdriver");
-
-        } catch (Exception e) {
-            log.error(e.getStackTrace());
-            e.getStackTrace();
-        }
-    }
-
     private void setup(HttpMessage msg) throws Exception {
+
+        config = new JSONUtils();
+        config.readConfig();
 
         this.site = msg.getRequestHeader().getURI().toString();
 
@@ -65,7 +44,7 @@ public class PHPShellInjection extends AbstractAppParamPlugin {
         DesiredCapabilities capabilities = new DesiredCapabilities();
         capabilities.setCapability(CapabilityType.PROXY, proxy);
 
-        System.setProperty("webdriver.chrome.driver", seleniumDriver);
+        System.setProperty("webdriver.chrome.driver", config.getSeleniumDriver());
         setDriver(new ChromeDriver());
         this.setDriver(getDriver());
         getDriver().manage().timeouts().implicitlyWait(30, TimeUnit.SECONDS);
@@ -74,11 +53,11 @@ public class PHPShellInjection extends AbstractAppParamPlugin {
     private void injectShell() {
         driver.get(site);
 
-        WebElement link = driver.findElement(By.name(selectBtn));
-        link.sendKeys(shellDir);
+        WebElement link = driver.findElement(By.name(config.getSelectBtn()));
+        link.sendKeys(config.getShellDir());
         this.sleep();
 
-        link = driver.findElement(By.name(submitBtn));
+        link = driver.findElement(By.name(config.getSubmitBtn()));
         link.click();
         this.sleep();
 
@@ -105,7 +84,6 @@ public class PHPShellInjection extends AbstractAppParamPlugin {
     @Override
     public void scan(HttpMessage httpMessage, String s, String s1) {
         this.init(httpMessage, this.getParent());
-        this.readConfigs();
 
         try {
             this.setup(httpMessage);

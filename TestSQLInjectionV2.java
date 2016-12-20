@@ -20,6 +20,8 @@ public class TestSQLInjectionV2 extends AbstractAppParamPlugin {
 
     private static Logger log = Logger.getLogger(TestSQLInjectionV2.class);
     private static Vulnerability vuln = Vulnerabilities.getVulnerability("wasc_8");
+    private JSONUtils config;
+
     /**
      * generic one-line comment. Various RDBMS Documentation suggests that this
      * syntax works with almost every single RDBMS considered here
@@ -46,21 +48,26 @@ public class TestSQLInjectionV2 extends AbstractAppParamPlugin {
     @Override
     public void scan(HttpMessage msg, String param, String value) {
 
+        config = new JSONUtils();
+        config.readConfig();
+
         for(int i=0; i<SQL_LOGIC_OR_TRUE.length; i++) {
 
             if (isStop()) {
                 return;
             }
 
-            List<HtmlContext> contexts = performAttack(msg, param,
-                    "' OR '1' = '1", "Succesfully logged in.", null, 0);
-            if (contexts == null) {
-                return;
-            }
-            if (contexts.size() > 0) {
-                // Yep, its vulnerable
-                bingo(Alert.RISK_HIGH, Alert.CONFIDENCE_MEDIUM, null, param, contexts.get(0).getTarget(),
-                        "", contexts.get(0).getTarget(), contexts.get(0).getMsg());
+            for(String test : config.getSQLSuccess()) {
+                List<HtmlContext> contexts = performAttack(msg, param,
+                        "' OR '1' = '1", test, null, 0);
+                if (contexts == null) {
+                    return;
+                }
+                if (contexts.size() > 0) {
+                    // Yep, its vulnerable
+                    bingo(Alert.RISK_HIGH, Alert.CONFIDENCE_MEDIUM, null, param, contexts.get(0).getTarget(),
+                            "", contexts.get(0).getTarget(), contexts.get(0).getMsg());
+                }
             }
         }
     }
