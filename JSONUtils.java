@@ -4,6 +4,7 @@ import net.sf.json.JSONArray;
 import net.sf.json.JSONObject;
 import net.sf.json.JSONSerializer;
 import org.apache.commons.io.IOUtils;
+import org.apache.commons.io.output.StringBuilderWriter;
 
 import java.io.File;
 import java.io.FileInputStream;
@@ -17,13 +18,17 @@ public class JSONUtils {
     private String selectBtn;
     private String submitBtn;
     private String seleniumDriver;
+    private String uploadSuccess;
+    private String passField;
+    private String pass;
+    private String shellInjected;
+    private String xPath;
     private List<String> sqlSuccess;
 
     public void readConfig() {
 
         try {
-
-            String jsonTxt = IOUtils.toString(new FileInputStream("/Users/Pedro/git/zap-extensions/src/org/zaproxy/zap/extension/ascanrules/configs.json"));
+            String jsonTxt = IOUtils.toString(new FileInputStream("/Users/mercurius/Desktop/zap-extensions/src/org/zaproxy/zap/extension/ascanrules/configs.json"));
 
             JSONObject jsonObject = (JSONObject) JSONSerializer.toJSON(jsonTxt);
 
@@ -32,6 +37,11 @@ public class JSONUtils {
             selectBtn = (String) jsonObject.get("selectbtn");
             submitBtn = (String) jsonObject.get("submitbtn");
             seleniumDriver = (String) jsonObject.get("seleniumdriver");
+            uploadSuccess = (String) jsonObject.get("uploadinject");
+            passField = (String) jsonObject.get("passfield");
+            pass = (String) jsonObject.get("pass");
+            shellInjected = (String) jsonObject.get("succshell");
+            xPath = (String) jsonObject.get("xpath");
             JSONArray jArray = jsonObject.getJSONArray("sqlSuccess");
             if (jArray != null) {
                 for (int i=0;i<jArray.size();i++){
@@ -57,8 +67,28 @@ public class JSONUtils {
         return selectBtn;
     }
 
+    public String getPass() {
+        return pass;
+    }
+
+    public String getxPath() {
+        return xPath;
+    }
+
+    public String getShellInjected() {
+        return shellInjected;
+    }
+
     public String getSubmitBtn() {
         return submitBtn;
+    }
+
+    public String getPassField() {
+        return passField;
+    }
+
+    public String getUploadSuccess() {
+        return uploadSuccess;
     }
 
     public String getSeleniumDriver() {

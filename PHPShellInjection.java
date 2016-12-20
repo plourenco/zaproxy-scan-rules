@@ -2,6 +2,8 @@ package org.zaproxy.zap.extension.ascanrules;
 
 import net.sf.json.JSONObject;
 import net.sf.json.JSONSerializer;
+import org.apache.commons.exec.ExecuteException;
+import org.apache.commons.httpclient.methods.ByteArrayRequestEntity;
 import org.apache.commons.io.IOUtils;
 import org.apache.log4j.Logger;
 
@@ -9,6 +11,7 @@ import org.openqa.selenium.chrome.ChromeDriver;
 import org.openqa.selenium.remote.*;
 import org.openqa.selenium.*;
 
+import org.openqa.selenium.remote.server.handler.WebElementHandler;
 import org.parosproxy.paros.core.scanner.*;
 import org.parosproxy.paros.network.HttpMessage;
 
@@ -52,18 +55,47 @@ public class PHPShellInjection extends AbstractAppParamPlugin {
 
     private void injectShell() {
         driver.get(site);
+        WebElement link;
 
-        WebElement link = driver.findElement(By.name(config.getSelectBtn()));
-        link.sendKeys(config.getShellDir());
-        this.sleep();
+        try {
+            if (driver.findElement(By.name(config.getSelectBtn())) != null){
+                link = driver.findElement(By.name(config.getSelectBtn()));
+                link.sendKeys(config.getShellDir());
+                this.sleep();
+            }
 
-        link = driver.findElement(By.name(config.getSubmitBtn()));
-        link.click();
-        this.sleep();
+            if (driver.findElement(By.name(config.getSubmitBtn())) != null){
+                link = driver.findElement(By.name(config.getSubmitBtn()));
+                link.click();
+                this.sleep();
+            }
+        } catch (Exception e){
+            log.error(e.getMessage());
+        }
 
-        if (driver.getPageSource().indexOf("Upload succesful: ") > 0) {
-            this.attackWorked = true;
-            System.out.println("Found shell injection");
+        if (driver.getPageSource().indexOf(config.getUploadSuccess()) > 0) {
+            try {
+                if (driver.findElement(By.xpath(config.getxPath())) != null) {
+                    link = driver.findElement(By.xpath(config.getxPath()));
+                    link.click();
+                    this.sleep();
+                }
+
+                if (driver.findElement(By.name(config.getPassField())) != null){
+                    link = driver.findElement(By.name(config.getPassField()));
+                    link.sendKeys(config.getPass());
+                    link.sendKeys(Keys.RETURN);
+                    this.sleep();
+                }
+
+                if (driver.findElement(By.id(config.getShellInjected())) != null) {
+                    this.attackWorked = true;
+                    System.out.println("Found Shell Injection");
+                }
+
+            } catch (Exception e) {
+                log.error(e.getMessage());
+            }
         } else {
             System.out.println("Didn't find shell injection");
         }
@@ -75,7 +107,7 @@ public class PHPShellInjection extends AbstractAppParamPlugin {
 
     private void sleep() {
         try {
-            Thread.sleep(3000);
+            Thread.sleep(1500);
         } catch (InterruptedException e) {
             log.error(e.getStackTrace());
         }
@@ -100,8 +132,8 @@ public class PHPShellInjection extends AbstractAppParamPlugin {
                         this.site, null, "attack",
                         "otherInfo", null, httpMessage);
             } catch (Exception e) {
-                log.error(e.getStackTrace());
-                System.out.println(e.getStackTrace());
+                log.error(e.getMessage());
+                System.out.println(e.getMessage());
             }
         }
     }

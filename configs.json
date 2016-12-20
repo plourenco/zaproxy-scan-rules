@@ -3,7 +3,12 @@
   "shelldir":"/Users/mercurius/Downloads/shell.php",
   "selectbtn": "userfile",
   "submitbtn":"upload",
-  "seleniumdriver":"/Users/Pedro/Downloads/chromedriver",
+  "uploadinject": "Upload succesful: ",
+  "passfield": "pass",
+  "pass": "b374k",
+  "succshell": "menuexplorer",
+  "xpath": "//a[contains(text(),'here')]",
+  "seleniumdriver":"/Users/mercurius/Downloads/chromedriver",
   "sqlSuccess": [
     "Succesfully logged in.",
     "Successfully logged in."
