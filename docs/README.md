@@ -99,7 +99,9 @@ This was an easy introduction to what you have to do to build ZAP extensions or 
 # Developing an extension
 We started by the basics, which were, for us, looking at other people's implementation. There was a pattern, and all of them extended AppPlugin, either via AbstractAppPlugin or AbstractAppParamPlugin.
 
-There will be a video here explaining how.
+After that we conclued that the ID for each extension had to be different. Also after implement all interface mandatory methods you must init the extension by calling `init()`. We did that in `scan()` method like `this.init(httpMessage, this.getParent())`
+
+There's also another important function that is `bingo()`. Basically bingo allows us to generate an alert when a vulnerability is found. You must pass some arguments. Please check them `@bingo implementation`.
 
 # Our extension
 As we were testing ZAP for a presentation we developed an insecure website. We ran ZAP tests against it but we found that there was not scans for html input boxes, only for url queries.
