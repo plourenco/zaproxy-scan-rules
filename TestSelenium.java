@@ -1,11 +1,8 @@
 package org.zaproxy.zap.extension.ascanrules;
 
-import java.net.UnknownHostException;
 import java.util.List;
 import java.util.concurrent.TimeUnit;
 
-import org.apache.commons.httpclient.InvalidRedirectLocationException;
-import org.apache.commons.httpclient.URIException;
 import org.openqa.selenium.*;
 
 import org.apache.log4j.Logger;
@@ -16,25 +13,52 @@ import org.openqa.selenium.remote.*;
 import org.parosproxy.paros.core.scanner.*;
 import org.parosproxy.paros.core.scanner.Alert;
 import org.parosproxy.paros.network.HttpMessage;
-import org.zaproxy.zap.httputils.HtmlContext;
-import org.zaproxy.zap.httputils.HtmlContextAnalyser;
 import org.zaproxy.zap.model.Vulnerabilities;
 import org.zaproxy.zap.model.Vulnerability;
 
-
+/**
+ * SQL Injection test using the Sellenium Web Driver Tool
+ * 19 December 2016
+ * @author mzamith
+ */
 public class TestSelenium extends AbstractAppParamPlugin {
 
+    //Required for the Chrome Driver tool
     public final String DRIVER_PATH = "/Users/mzamith/Downloads/chromedriver";
-
-    private Logger log = Logger.getLogger(this.getClass());
     private static Vulnerability vuln = Vulnerabilities.getVulnerability("wasc_8");
 
+    /**
+     * generic one-line comment. Various RDBMS Documentation suggests that this
+     * syntax works with almost every single RDBMS considered here
+     */
+    public final String SQL_ONE_LINE_COMMENT = " -- ";
 
+    /**
+     * always true statement for comparison if no output is returned from AND in
+     * boolean based SQL injection check Note that, if necessary, the code also
+     * tries a variant with the one-line comment " -- " appended to the end.
+     */
+    private final String[] SQL_LOGIC_OR_TRUE = {
+            " OR 1=1" + SQL_ONE_LINE_COMMENT,
+            "' OR '1'='1'" + SQL_ONE_LINE_COMMENT,
+            "\" OR \"1\"=\"1\"" + SQL_ONE_LINE_COMMENT,
+            " OR 1=1",
+            "' OR '1'='1",
+            "\" OR \"1\"=\"1",
+            "%", //attack for SQL LIKE statements
+            "%' " + SQL_ONE_LINE_COMMENT, //attack for SQL LIKE statements
+            "%\" " + SQL_ONE_LINE_COMMENT, //attack for SQL LIKE statements
+    };
+    private Logger log = Logger.getLogger(this.getClass());
     private WebDriver driver;
     private String site;
 
-    private boolean attackWorked = false;
-
+    /**
+     * Sets up the Selemium test with the necessary components
+     * This method creates a new proxy object and also a new Chrome Driver object
+     *
+     * @param  msg  message from the scan ZAP method. Allows to retrieve the inserted URI
+     */
     public void setUp(HttpMessage msg) throws Exception {
 
         this.site = msg.getRequestHeader().getURI().toString();
@@ -52,43 +76,91 @@ public class TestSelenium extends AbstractAppParamPlugin {
         driver.manage().timeouts().implicitlyWait(30, TimeUnit.SECONDS);
     }
 
-    public void tearDown(HttpMessage msg) throws Exception {
+    /**
+     * Tears down the test, closing the browser window
+     */
+    public void tearDown() throws Exception {
         driver.close();
-
-
     }
 
-    public void tstLoginUser(HttpMessage msg) {
+    /**
+     * Tests a User login.
+     * The test is successful if a predetermined message appears on the screen.
+     *
+     * @param  value  input value given by the ZAP scan method
+     * @param  msg  Http message from the scan ZAP method.
+     */
+    public void tstLoginUser(String value, HttpMessage msg) {
 
-        this.loginUser("tom",  "' OR '1' = '1");
+        for (int i = 0; i < this.SQL_LOGIC_OR_TRUE.length; i++){ //go through all the injection strings
 
+            HttpMessage msg2 = getNewMsg();
+            String sqlBooleanAndTrueValue = SQL_LOGIC_OR_TRUE[i];
 
-        if (driver.getPageSource().indexOf("Succesfully logged in.") > 0) {
-            System.out.println("LOGIN: PASS");
+            //sleep(2);
 
-            this.attackWorked = true;
+            this.loginUser(value,  sqlBooleanAndTrueValue); //attempt to log in
 
+            //sleep(2);
 
-        }else
-            System.out.println("LOGIN: FAIL");
+            //Success if the success message is displayed
+            if (driver.getPageSource().indexOf("Succesfully logged in.") > 0) {
 
+                System.out.println("LOGIN: PASS");
+
+                bingo(Alert.RISK_HIGH, Alert.CONFIDENCE_MEDIUM, getName(), getDescription(),
+                        this.site, //url
+                        value, sqlBooleanAndTrueValue,
+                        "extra info", getSolution(), "", msg2);
+                // break;
+
+            }else
+                System.out.println("LOGIN: FAIL");
+        }
     }
 
-
+    /**
+     * Attempts a login by filling in a password and text type input fields
+     *
+     * @param  user  username for login attempt
+     * @param  password  password for login attempt
+     */
     public void loginUser(String user, String password) {
-        driver.get(site);
 
-        WebElement link = driver.findElement(By.name("username"));
-        link.sendKeys(user);
+        driver.get(site); //Open Chrome browser
 
-        link = driver.findElement(By.name("passwd"));
-        link.sendKeys(password);
+        WebElement passwordInput = driver.findElement(By.cssSelector("input[type='password']")); //find password input
+        List<WebElement> textInputs = driver.findElements(By.cssSelector("input[type='text']")); // find text inputs
 
-        link = driver.findElement(By.id("submit"));
-        link.click();
-        //sleep();
+        for (int i = 0; i < textInputs.size(); i++){
+            textInputs.get(i).sendKeys(user);
+        }
+
+        passwordInput.sendKeys(password);
+
+        //sleep(1);
+
+        WebElement submitButton = driver.findElement(By.cssSelector("input[type='submit']"));
+        submitButton.click(); //submit form
     }
 
+    /**
+     * UtiliTy method for testing
+     *
+     * @param  seconds  number of seconds for sleep
+     */
+    private void sleep(int seconds) {
+        try {
+            Thread.sleep(seconds * 1000);
+        } catch (InterruptedException e) {
+            e.getMessage();
+        }
+    }
+
+
+    /**
+     * GETTERS AND SETTERS
+     */
     protected WebDriver getDriver() {
         return driver;
     }
@@ -105,19 +177,9 @@ public class TestSelenium extends AbstractAppParamPlugin {
         this.site = site;
     }
 
-    private void sleep() {
-        try {
-            Thread.sleep(3000);
-        } catch (InterruptedException e) {
-            e.getMessage();
-        }
-    }
-
-    public void testAll(HttpMessage msg) {
-        tstLoginUser(msg);
-    }
-
-
+    /**
+     * NECESSARY METHODS FOR ZAP PLUGIN
+     */
     @Override
     public int getId() {
         return 45543;
@@ -174,40 +236,6 @@ public class TestSelenium extends AbstractAppParamPlugin {
 
     }
 
-    private List<HtmlContext> performAttack (HttpMessage msg, String param, String attack,
-                                             HtmlContext targetContext, int ignoreFlags) {
-        if (isStop()) {
-            return null;
-        }
-
-        HttpMessage msg2 = msg.cloneRequest();
-        setParameter(msg2, param, attack);
-        try {
-            sendAndReceive(msg2);
-        } catch (URIException e) {
-            if (log.isDebugEnabled()) {
-                log.debug("Failed to send HTTP message, cause: " + e.getMessage());
-            }
-            return null;
-        } catch (InvalidRedirectLocationException |UnknownHostException e) {
-            // Not an error, just means we probably attacked the redirect location
-            return null;
-        } catch (Exception e) {
-            log.error(e.getMessage(), e);
-        }
-
-        if (isStop()) {
-            return null;
-        }
-
-        HtmlContextAnalyser hca = new HtmlContextAnalyser(msg2);
-        if (Plugin.AlertThreshold.HIGH.equals(this.getAlertThreshold())) {
-            // High level, so check all results are in the expected context
-            return hca.getHtmlContexts(attack, targetContext, ignoreFlags);
-        }
-        return hca.getHtmlContexts(attack);
-    }
-
 
     @Override
     public void scan(HttpMessage msg, String param, String value) {
@@ -216,26 +244,11 @@ public class TestSelenium extends AbstractAppParamPlugin {
 
         try{
             this.setUp(msg);
-            this.testAll(msg);
-            this.tearDown(msg);
+            this.tstLoginUser(value, msg);
+            this.tearDown();
         }catch (Exception e){
             log.error(e.getMessage());
         }
-
-        System.out.println("TEAR DOWN");
-
-        if (this.attackWorked){
-
-            try {
-
-                bingo(Alert.RISK_HIGH, Alert.CONFIDENCE_MEDIUM,
-                        this.site, null, "attack",
-                        "otherInfo", null, msg);
-            }catch (Exception e){
-                log.error(e.getMessage());
-            }
-        }
-        System.out.println("TEAR DOWN2");
 
     }
 }
