@@ -74,8 +74,7 @@ public class TestSelenium extends AbstractAppParamPlugin {
         proxy.setSslProxy("localhost:8090");
         DesiredCapabilities capabilities = new DesiredCapabilities();
         capabilities.setCapability(CapabilityType.PROXY, proxy);
-
-        System.setProperty("webdriver.chrome.driver", "/Users/mercurius/Downloads/chromedriver");
+        
         System.setProperty("webdriver.chrome.driver", config.getSeleniumDriver());
         driver = new ChromeDriver();
         this.setDriver(driver);
