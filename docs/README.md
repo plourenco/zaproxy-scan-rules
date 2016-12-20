@@ -119,5 +119,20 @@ Based on DomXSS and ReflectedXSS we try to inject code wishing we will be able t
 ### Form Based Shell Injection
 Based on Html File Input Type Element we try to upload a PHP Shell expecting to access the file system without authorization.
 
+DISCLAIMER!   
+Only Works in Chrome
+
+1. Clone our github project [here](https://github.com/pedroo21/ZAP-Multi-Scan-Rules) into `ascanrules` at ZAP-Extensions
+2. Open `PHPShellInjectionClass` and change `configPath` to your ZAP-Extension directory and add `src/org/zaproxy/zap/extension/ascanrules/configs.json` to the end of it.
+3. Change the `configs.json` to suit your needs
+4. ShellUrl -> HTTP Link to where the shell should be uploaded
+5. ShellDir -> File path to the shell to inject
+6. SelectBtn -> Name of the HTML file selection button
+7. SubmitBtn -> Name of the HTML submit button
+8. SeleniumDriver -> File path to the selenium driver. If you don't have download it [here](https://sites.google.com/a/chromium.org/chromedriver/downloads)
+9. Open Ant window and build `ascanrules`
+10. Execute ZAP and test our extension
+
+
 
 
