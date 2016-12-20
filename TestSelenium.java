@@ -75,10 +75,10 @@ public class TestSelenium extends AbstractAppParamPlugin {
         DesiredCapabilities capabilities = new DesiredCapabilities();
         capabilities.setCapability(CapabilityType.PROXY, proxy);
 
-        System.setProperty("webdriver.chrome.driver", "/Users/mzamith/Desktop/MESW/TVVS/zap-extensions/src/org/zaproxy/zap/extension/ascanrules/chromedriver");
+        System.setProperty("webdriver.chrome.driver", config.getSeleniumDriver());
         driver = new ChromeDriver();
         this.setDriver(driver);
-        driver.manage().timeouts().implicitlyWait(30, TimeUnit.SECONDS);
+        driver.manage().timeouts().implicitlyWait(1, TimeUnit.SECONDS);
     }
 
     /**
@@ -144,21 +144,33 @@ public class TestSelenium extends AbstractAppParamPlugin {
      */
     public void loginUser(String user, String password) {
 
+        List<WebElement> textInputs = null;
+        WebElement passwordInput = null;
 
 
-        WebElement passwordInput = driver.findElement(By.cssSelector("input[type='password']")); //find password input
-        List<WebElement> textInputs = driver.findElements(By.cssSelector("input[type='text']")); // find text inputs
+        if(!driver.findElements(By.cssSelector("input[type='password']")).isEmpty()) {
+            passwordInput = driver.findElement(By.cssSelector("input[type='password']"));
+        }
+        //find password input
 
-        for (int i = 0; i < textInputs.size(); i++){
-            textInputs.get(i).sendKeys(user);
+        if(!driver.findElements(By.cssSelector("input[type='text']")).isEmpty()){
+            textInputs = driver.findElements(By.cssSelector("input[type='text']")); // find text inputs
         }
 
-        passwordInput.sendKeys(password);
+        if (passwordInput != null && textInputs != null){
+            for (int i = 0; i < textInputs.size(); i++){
+                textInputs.get(i).sendKeys(user);
+            }
+            passwordInput.sendKeys(password);
 
+            if( !driver.findElements(By.cssSelector("input[type='submit']")).isEmpty()){
+                WebElement submitButton = driver.findElement(By.cssSelector("input[type='submit']"));
+                submitButton.click(); //submit form
+            }
+        }
         //sleep(1);
 
-        WebElement submitButton = driver.findElement(By.cssSelector("input[type='submit']"));
-        submitButton.click(); //submit form
+
     }
 
     /**
