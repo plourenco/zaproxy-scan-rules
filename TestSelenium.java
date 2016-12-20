@@ -75,7 +75,7 @@ public class TestSelenium extends AbstractAppParamPlugin {
         DesiredCapabilities capabilities = new DesiredCapabilities();
         capabilities.setCapability(CapabilityType.PROXY, proxy);
 
-        System.setProperty("webdriver.chrome.driver", config.getSeleniumDriver());
+        System.setProperty("webdriver.chrome.driver", "/Users/mzamith/Desktop/MESW/TVVS/zap-extensions/src/org/zaproxy/zap/extension/ascanrules/chromedriver");
         driver = new ChromeDriver();
         this.setDriver(driver);
         driver.manage().timeouts().implicitlyWait(30, TimeUnit.SECONDS);
@@ -97,6 +97,10 @@ public class TestSelenium extends AbstractAppParamPlugin {
      */
     public void tstLoginUser(String value, HttpMessage msg) {
 
+        System.out.print(driver.getTitle());
+
+        driver.get(site); //Open Chrome browser
+
         for (int i = 0; i < this.SQL_LOGIC_OR_TRUE.length; i++){ //go through all the injection strings
 
             HttpMessage msg2 = getNewMsg();
@@ -105,6 +109,8 @@ public class TestSelenium extends AbstractAppParamPlugin {
             //sleep(2);
 
             this.loginUser(value,  sqlBooleanAndTrueValue); //attempt to log in
+
+            boolean sqlInjectionFound = false;
 
             //sleep(2);
 
@@ -118,11 +124,15 @@ public class TestSelenium extends AbstractAppParamPlugin {
                             this.site, //url
                             value, sqlBooleanAndTrueValue,
                             "extra info", getSolution(), "", msg2);
-                    // break;
+
+                    sqlInjectionFound = true;
+                    break;
 
                 } else
                     System.out.println("LOGIN: FAIL");
             }
+
+            if (sqlInjectionFound) break;
         }
     }
 
@@ -134,7 +144,7 @@ public class TestSelenium extends AbstractAppParamPlugin {
      */
     public void loginUser(String user, String password) {
 
-        driver.get(site); //Open Chrome browser
+
 
         WebElement passwordInput = driver.findElement(By.cssSelector("input[type='password']")); //find password input
         List<WebElement> textInputs = driver.findElements(By.cssSelector("input[type='text']")); // find text inputs

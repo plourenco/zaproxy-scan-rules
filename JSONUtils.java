@@ -28,7 +28,7 @@ public class JSONUtils {
     public void readConfig() {
 
         try {
-            String jsonTxt = IOUtils.toString(new FileInputStream("/Users/mercurius/Desktop/zap-extensions/src/org/zaproxy/zap/extension/ascanrules/configs.json"));
+            String jsonTxt = IOUtils.toString(new FileInputStream("/Users/mzamith/Desktop/MESW/TVVS/zap-extensions/src/org/zaproxy/zap/extension/ascanrules/configs.json"));
 
             JSONObject jsonObject = (JSONObject) JSONSerializer.toJSON(jsonTxt);
 
@@ -43,9 +43,16 @@ public class JSONUtils {
             shellInjected = (String) jsonObject.get("succshell");
             xPath = (String) jsonObject.get("xpath");
             JSONArray jArray = jsonObject.getJSONArray("sqlSuccess");
+
+            System.out.print (jArray.get(0));
+
+            sqlSuccess = new ArrayList<>();
+
             if (jArray != null) {
-                for (int i=0;i<jArray.size();i++){
+                for (int i = 0; i < jArray.size(); i++){
                     sqlSuccess.add(jArray.getString(i));
+
+                    System.out.print(sqlSuccess.get(i));
                 }
             }
 
