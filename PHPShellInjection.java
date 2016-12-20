@@ -50,7 +50,7 @@ public class PHPShellInjection extends AbstractAppParamPlugin {
         System.setProperty("webdriver.chrome.driver", config.getSeleniumDriver());
         setDriver(new ChromeDriver());
         this.setDriver(getDriver());
-        getDriver().manage().timeouts().implicitlyWait(30, TimeUnit.SECONDS);
+        getDriver().manage().timeouts().implicitlyWait(1, TimeUnit.SECONDS);
     }
 
     private void injectShell() {
@@ -58,13 +58,14 @@ public class PHPShellInjection extends AbstractAppParamPlugin {
         WebElement link;
 
         try {
-            if (driver.findElement(By.name(config.getSelectBtn())) != null){
+            if (driver.findElements(By.name(config.getSelectBtn())).size() > 0){
                 link = driver.findElement(By.name(config.getSelectBtn()));
                 link.sendKeys(config.getShellDir());
                 this.sleep();
             }
 
-            if (driver.findElement(By.name(config.getSubmitBtn())) != null){
+
+            if (driver.findElements(By.name(config.getSubmitBtn())).size() > 0){
                 link = driver.findElement(By.name(config.getSubmitBtn()));
                 link.click();
                 this.sleep();
@@ -75,20 +76,20 @@ public class PHPShellInjection extends AbstractAppParamPlugin {
 
         if (driver.getPageSource().indexOf(config.getUploadSuccess()) > 0) {
             try {
-                if (driver.findElement(By.xpath(config.getxPath())) != null) {
+                if (driver.findElements(By.xpath(config.getxPath())).size() > 0) {
                     link = driver.findElement(By.xpath(config.getxPath()));
                     link.click();
                     this.sleep();
                 }
 
-                if (driver.findElement(By.name(config.getPassField())) != null){
+                if (driver.findElements(By.name(config.getPassField())).size() > 0){
                     link = driver.findElement(By.name(config.getPassField()));
                     link.sendKeys(config.getPass());
                     link.sendKeys(Keys.RETURN);
                     this.sleep();
                 }
 
-                if (driver.findElement(By.id(config.getShellInjected())) != null) {
+                if (driver.findElements(By.id(config.getShellInjected())).size() > 0) {
                     this.attackWorked = true;
                     System.out.println("Found Shell Injection");
                 }
