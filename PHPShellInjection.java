@@ -34,21 +34,13 @@ public class PHPShellInjection extends AbstractAppParamPlugin {
     private String site;
     private boolean attackWorked = false;
 
-    private String configPath = "/Users/mercurius/Desktop/zap-extensions/src/org/zaproxy/zap/extension/ascanrules/configs.json";
-
     private void readConfigs(){
 
         try {
             String jsonTxt = IOUtils.toString(new FileInputStream(getClass().getResource("configs.json").getFile()),
                     "UTF-8");
 
-<<<<<<< HEAD
-            Object obj = parser.parse(new FileReader(configPath));
-
-            JSONObject jsonObject = (JSONObject) obj;
-=======
             JSONObject jsonObject = (JSONObject) JSONSerializer.toJSON(jsonTxt);
->>>>>>> 9f8ce0a993e4bcfa04505b3abcf611608fc9a2b3
 
             shellDir = (String) jsonObject.get("shelldir");
             shellUrl = (String) jsonObject.get("shellurl");
