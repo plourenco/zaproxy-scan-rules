@@ -26,7 +26,6 @@ import org.zaproxy.zap.model.Vulnerability;
 public class TestSelenium extends AbstractAppParamPlugin {
 
     //Required for the Chrome Driver tool
-    public final String DRIVER_PATH = "/Users/mzamith/Downloads/chromedriver";
     private static Vulnerability vuln = Vulnerabilities.getVulnerability("wasc_8");
     private JSONUtils config;
 
