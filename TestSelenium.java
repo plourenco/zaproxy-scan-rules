@@ -75,7 +75,7 @@ public class TestSelenium extends AbstractAppParamPlugin {
         DesiredCapabilities capabilities = new DesiredCapabilities();
         capabilities.setCapability(CapabilityType.PROXY, proxy);
 
-        System.setProperty("webdriver.chrome.driver", "/Users/mzamith/Desktop/MESW/TVVS/zap-extensions/src/org/zaproxy/zap/extension/ascanrules/chromedriver");
+        System.setProperty("webdriver.chrome.driver", "/Users/mercurius/Downloads/chromedriver");
         driver = new ChromeDriver();
         this.setDriver(driver);
         driver.manage().timeouts().implicitlyWait(30, TimeUnit.SECONDS);
