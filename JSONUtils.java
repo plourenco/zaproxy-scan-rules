@@ -28,7 +28,7 @@ public class JSONUtils {
     public void readConfig() {
 
         try {
-            String jsonTxt = IOUtils.toString(new FileInputStream("/Users/mzamith/Desktop/MESW/TVVS/zap-extensions/src/org/zaproxy/zap/extension/ascanrules/configs.json"));
+            String jsonTxt = IOUtils.toString(new FileInputStream("/Users/mercurius/Desktop/zap-extensions/src/org/zaproxy/zap/extension/ascanrules/configs.json"));
 
             JSONObject jsonObject = (JSONObject) JSONSerializer.toJSON(jsonTxt);
 

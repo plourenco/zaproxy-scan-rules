@@ -1,28 +1,24 @@
 package org.zaproxy.zap.extension.ascanrules;
 
-import net.sf.json.JSONObject;
-import net.sf.json.JSONSerializer;
-import org.apache.commons.exec.ExecuteException;
-import org.apache.commons.httpclient.methods.ByteArrayRequestEntity;
-import org.apache.commons.io.IOUtils;
 import org.apache.log4j.Logger;
 
 import org.openqa.selenium.chrome.ChromeDriver;
 import org.openqa.selenium.remote.*;
 import org.openqa.selenium.*;
 
-import org.openqa.selenium.remote.server.handler.WebElementHandler;
 import org.parosproxy.paros.core.scanner.*;
 import org.parosproxy.paros.network.HttpMessage;
 
 import org.zaproxy.zap.model.Vulnerabilities;
 import org.zaproxy.zap.model.Vulnerability;
 
-import java.io.FileInputStream;
-import java.io.FileReader;
-
 import java.util.concurrent.TimeUnit;
 
+/**
+ * SQL Injection test using the Selenium Web Driver Tool
+ * 19 December 2016
+ * @author ngmatos
+ */
 public class PHPShellInjection extends AbstractAppParamPlugin {
 
     private Logger log = Logger.getLogger(this.getClass());
