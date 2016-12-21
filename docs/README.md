@@ -1,5 +1,5 @@
 # Standalone MultiScan Tools for ZAP (Zed Attack Proxy)
-MultiscanTools is a set of security testing tools for ZAP: it enhances XSS, form based SQLInjection and Shell Injection.
+MultiscanTools is a set of security testing tools for ZAP: it enhances form based SQLInjection and Shell Injection.
 
 # Who are we?
 We are students of MESW (Software Engineering Masters) at FEUP (Porto Engineering University).
@@ -124,7 +124,7 @@ DISCLAIMER!
 Only Works in Chrome
 
 1. Clone our github project [here](https://github.com/pedroo21/ZAP-Multi-Scan-Rules) into `ascanrules` at ZAP-Extensions
-2. Open `PHPShellInjectionClass` and change `configPath` to your ZAP-Extension directory and add `src/org/zaproxy/zap/extension/ascanrules/configs.json` to the end of it.
+2. Open `JSONUtils` and change `jsonTxt` path to your ZAP-Extension directory and add `src/org/zaproxy/zap/extension/ascanrules/configs.json` to the end of it.
 3. Change the `configs.json` to suit your needs
 4. ShellDir -> File path to the shell to inject
 5. SelectBtn -> Name of the HTML file selection button
