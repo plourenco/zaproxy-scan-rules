@@ -95,6 +95,14 @@ This was an easy introduction to what you have to do to build ZAP extensions or 
 9. Change the name to `zap_dev:jar`
 10. Set the output directory to `"projectPath"/zaproxy/build`
 11. Tick `Build on Make`
+12. Open `Run -> Edit Configurations` in IntelliJ
+13. Add an `Application`
+14. Name it `ZAP`. Set the `main class` to `org.zaproxy.zap.ZAP`
+15. Set working directory to `"zaproxyPath"/build`
+16. Set `use classpath of module` to `zaproxy`
+17. If `before launch` is not set, click `+` and select `Make``
+18. Click `Apply` and `Ok`
+19. You're all set
 
 # Developing an extension
 We started by the basics, which were, for us, looking at other people's implementation. There was a pattern, and all of them extended AppPlugin, either via AbstractAppPlugin or AbstractAppParamPlugin.
