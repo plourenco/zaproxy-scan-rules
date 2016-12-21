@@ -19,7 +19,7 @@ import org.zaproxy.zap.model.Vulnerabilities;
 import org.zaproxy.zap.model.Vulnerability;
 
 /**
- * SQL Injection test using the Sellenium Web Driver Tool
+ * SQL Injection test using the Selenium Web Driver Tool
  * 19 December 2016
  * @author mzamith
  */
@@ -108,7 +108,7 @@ public class TestSelenium extends AbstractAppParamPlugin {
 
             //sleep(2);
 
-            this.loginUser(value,  sqlBooleanAndTrueValue); //attempt to log in
+            this.loginUser(value, sqlBooleanAndTrueValue); //attempt to log in
 
             boolean sqlInjectionFound = false;
 
@@ -278,6 +278,5 @@ public class TestSelenium extends AbstractAppParamPlugin {
         }catch (Exception e){
             e.printStackTrace();
         }
-
     }
 }

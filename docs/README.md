@@ -115,8 +115,7 @@ Selenium allows us to query for html elements, insert data and click into them.
 ### Form Based SQLInjection
 Based on well known SQL strings and queries we try to inject code into the application, hoping it will lead us to use the system without the alleged authorization.
 
-### Form Based XSS
-Based on DomXSS and ReflectedXSS we try to inject code wishing we will be able to get something to our advantage.
+[![IMAGE ALT TEXT](http://img.youtube.com/vi/X1rsoT4a09Q/0.jpg)](http://www.youtube.com/watch?v=X1rsoT4a09Q "Video Title")
 
 ### Form Based Shell Injection
 Based on Html File Input Type Element we try to upload a PHP Shell expecting to access the file system without authorization.
@@ -127,13 +126,17 @@ Only Works in Chrome
 1. Clone our github project [here](https://github.com/pedroo21/ZAP-Multi-Scan-Rules) into `ascanrules` at ZAP-Extensions
 2. Open `PHPShellInjectionClass` and change `configPath` to your ZAP-Extension directory and add `src/org/zaproxy/zap/extension/ascanrules/configs.json` to the end of it.
 3. Change the `configs.json` to suit your needs
-4. ShellUrl -> HTTP Link to where the shell should be uploaded
-5. ShellDir -> File path to the shell to inject
-6. SelectBtn -> Name of the HTML file selection button
-7. SubmitBtn -> Name of the HTML submit button
-8. SeleniumDriver -> File path to the selenium driver. If you don't have download it [here](https://sites.google.com/a/chromium.org/chromedriver/downloads)
-9. Open Ant window and build `ascanrules`
-10. Execute ZAP and test our extension
+4. ShellDir -> File path to the shell to inject
+5. SelectBtn -> Name of the HTML file selection button
+6. SubmitBtn -> Name of the HTML submit button
+7. UploadInject -> String of successful injection
+8. PassField -> Password field name
+9. Pass -> Shell Password
+10. SuccShell -> Shell id to compare with DOM. If it matches shell was accessed
+11. xPath -> Check an "a" element in DOM containing the link to the shell (if it was uploaded successfully)
+12. SeleniumDriver -> File path to the selenium driver. If you don't have download it [here](https://sites.google.com/a/chromium.org/chromedriver/downloads)
+13. Open Ant window and build `ascanrules`
+14. Execute ZAP and test our extension
 
 
 

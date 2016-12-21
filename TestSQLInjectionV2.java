@@ -16,6 +16,11 @@ import org.zaproxy.zap.model.Vulnerability;
 import java.net.UnknownHostException;
 import java.util.List;
 
+/**
+ * SQL Injection test using the Selenium Web Driver Tool
+ * 19 December 2016
+ * @author pedroo21
+ */
 public class TestSQLInjectionV2 extends AbstractAppParamPlugin {
 
     private static Logger log = Logger.getLogger(TestSQLInjectionV2.class);
@@ -51,7 +56,7 @@ public class TestSQLInjectionV2 extends AbstractAppParamPlugin {
         config = new JSONUtils();
         config.readConfig();
 
-        for(int i=0; i<SQL_LOGIC_OR_TRUE.length; i++) {
+        for(String sql : SQL_LOGIC_OR_TRUE) {
 
             if (isStop()) {
                 return;
@@ -59,7 +64,7 @@ public class TestSQLInjectionV2 extends AbstractAppParamPlugin {
 
             for(String test : config.getSQLSuccess()) {
                 List<HtmlContext> contexts = performAttack(msg, param,
-                        "' OR '1' = '1", test, null, 0);
+                        sql, test, null, 0);
                 if (contexts == null) {
                     return;
                 }
@@ -133,13 +138,13 @@ public class TestSQLInjectionV2 extends AbstractAppParamPlugin {
 
     /**
      * Clone the request, send and receive and look evidences of attack
-     * @param msg
-     * @param param
-     * @param attack
-     * @param lookup
-     * @param targetContext
-     * @param ignoreFlags
-     * @return
+     * @param msg msg
+     * @param param param
+     * @param attack attack
+     * @param lookup lookup
+     * @param targetContext targetContext
+     * @param ignoreFlags ignoreFlags
+     * @return successContexts
      */
     private List<HtmlContext> performAttack (HttpMessage msg, String param, String attack,
                                              String lookup,
