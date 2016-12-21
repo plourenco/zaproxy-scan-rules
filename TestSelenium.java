@@ -78,7 +78,7 @@ public class TestSelenium extends AbstractAppParamPlugin {
         System.setProperty("webdriver.chrome.driver", config.getSeleniumDriver());
         driver = new ChromeDriver();
         this.setDriver(driver);
-        driver.manage().timeouts().implicitlyWait(1, TimeUnit.SECONDS);
+        driver.manage().timeouts().implicitlyWait(200, TimeUnit.MILLISECONDS);
     }
 
     /**

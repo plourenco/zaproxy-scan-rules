@@ -46,7 +46,7 @@ public class PHPShellInjection extends AbstractAppParamPlugin {
         System.setProperty("webdriver.chrome.driver", config.getSeleniumDriver());
         setDriver(new ChromeDriver());
         this.setDriver(getDriver());
-        getDriver().manage().timeouts().implicitlyWait(1, TimeUnit.SECONDS);
+        getDriver().manage().timeouts().implicitlyWait(200, TimeUnit.MILLISECONDS);
     }
 
     private void injectShell() {
